@@ -1,0 +1,62 @@
+@font-face{
+    font-family: "Poly-Regular";
+    src: url('webfonts/poly/Poly-Regular.otf'),
+    url('webfonts/poly/Poly-Regular.otf'); /* IE */
+}
+body{
+  padding-top: 20px;
+  font-size: 21px;
+  font-family: "Poly-Regular";, "Swiss 721 SWA", "Helvetica Neue", Helvetica, Arial, "Nimbus Sans L", sans-serif;
+  line-height: 27px;
+
+  /*background-color: #B8B;*/
+  background-color: #BA8;
+  color: #000;
+}
+a{
+  color: #FFF;
+  text-decoration: underline;
+}
+h1{
+  padding-top: 10px;
+  letter-spacing: 3px;
+  line-height: 36px;
+}
+h2{
+  padding-top: 5px;
+  line-height: 32px;
+}
+
+ul{
+  list-style-type: square;
+}
+.separator{
+  height: 1px;
+  background-color: #777;
+
+  border: 0px;
+  border-bottom: 1px solid black;
+}
+tt{
+  padding: 3px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: black;
+  color: white;
+  width: auto;
+}
+
+table{
+  padding: 0px;
+  margin: 0px;
+  border: 1px solid black;
+}
+th{
+  color: white;
+  background-color: black;
+}
+td,th{
+  margin: 0px;
+  padding: 4px;
+  border: 1px solid black;
+}

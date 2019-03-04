@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link href="style.css" rel="stylesheet">
+	</head>
+	<body>
+
+
+<h1 id='Logs'>Logs</h1>
+
+<p>This is where everything that has been installed, configured, tweaked, and geeked, is recorded for future reference.</p>
+
+<h3 id='Keeps track of:'>Keeps track of:</h3>
+
+<ul>
+	<li><a href="#Installed">Installed</a> programs, whether installed <a href="#via apt-get">via apt-get</a> or <a href="#via coding">via coding</a>.</li>
+	<li><a href="#Configuration Tweaks">Configuration Tweaks</a> made to configuration files.</li>
+</ul>
+<h3 id='Includes:'>Includes:</h3>
+
+<ul>
+	<li>A <a href="#Glossary of Programs">Glossary of Programs</a></li>
+</ul>
+<div class="separator"></div>
+
+<h1 id='Installed'>Installed</h1>
+
+<p>This is a comprehensive list of every program added to the system, since a fresh install.</p>
+
+<h2 id='via apt-get'>via apt-get</h2>
+
+<ul>
+	<li><a href="#fluxbox">fluxbox</a></li>
+	<li><a href="#dzen2">dzen2</a></li>
+	<li><a href="#conky">conky</a></li>
+	<li><a href="#dmenu">dmenu</a></li>
+	<li><a href="#geany">geany</a></li>
+	<li><a href="#vlc">vlc</a></li>
+	<li><a href="#mplayer">mplayer</a></li>
+	<li><a href="#vivaldi">vivaldi</a></li>
+	<li><a href="#nginx">nginx</a></li>
+	<li><a href="#compton">compton</a></li>
+	<li><a href="#krita">krita</a></li>
+	<li><a href="#leafpad">leafpad</a></li>
+	<li><a href="#turtl">turtl</a></li>
+	<li><a href="#dconf2">dconf2</a></li>
+	<li><a href="#youtube-dl">youtube-dl</a></li>
+	<li><a href="#xpdf">xpdf</a></li>
+	<li><a href="#kate">kate</a></li>
+	<li><a href="#sl">sl</a></li>
+	<li><a href="#greed">greed</a></li>
+	<li><a href="#myman">myman</a></li>
+	<li><a href="#nyancat">nyancat</a></li>
+</ul>
+<h2 id='via coding'>via coding</h2>
+
+<ul>
+	<li><a href="#notecrypt">notecrypt</a></li>
+	<li><a href="#theconstruct">theconstruct</a></li>
+	<li><a href="#80">80</a></li>
+	<li><a href="#memorize">memorize</a></li>
+	<li><a href="#ethmon">ethmon</a> : adds to the slit something to monitor internet usage for ethernet
+	<ul>
+		<li>the wifi one is already there by default</li>
+	</ul></li>
+	<li><a href="#tt">tt</a>
+	<ul>
+		<li>starts one long skinny window, and a window that takes the rest of the screen. Neither use 'screen' by default.</li>
+		<li>needs a terminal already open</li>
+	</ul></li>
+	<li><a href="#ttt">ttt</a>
+	<ul>
+		<li>starts an array of things, including vpn, memorize, top, and another 'screen' window.</li>
+		<li>needs a terminal already open</li>
+	</ul></li>
+	<li><a href="#goodnight">goodnight</a></li>
+	<li><a href="#pickvpn">pickvpn</a></li>
+	<li><a href="#ovpn">ovpn</a></li>
+	<li><a href="#dosbox">dosbox</a> : starts up dosbox with ZZT already running</li>
+	<li><a href="#zzt">zzt</a> : starts up dosbox with ZZT already running</li>
+	<li><a href="#nott">nott</a> is just an experiment to make 'notecrypt' more simple/understandable.</li>
+	<li><a href="#mama">mama</a>
+	<ul>
+		<li>only sets to US and not back to DVORAK</li>
+	</ul></li>
+	<li><a href="#eel">eel</a></li>
+	<li>wikify - copied from thesheep's wikicreole implementation</li>
+	<li>htmldump - used with wikify to create localhost/htmldump from wikicreole text files: "wikify creoletextfile | htmldump"</li>
+	<li>campcreole - used with wikify to create localhost/htmldump from wikicreole text files: "wikify creoletextfile | htmldump"</li>
+</ul>
+<div class="separator"></div>
+
+<h1 id='Configuration Tweaks'>Configuration Tweaks</h1>
+
+<h2 id='conky'>conky</h2>
+<p>This displays the date/time and battery status in the top-left corner of every screen. It does this by piping "conky" to dzen2.</p>
+<ul>
+	<li>Uses ".conkyrc".</li>
+	<li>Copied and edited script "/bin/dzconky"</li>
+</ul>
+<h2 id='fluxbox startup scripts'>fluxbox startup scripts</h2>
+<p>Added to startup scripts ".fluxbox/startup":</p>
+<ul>
+	<li>dzconky&amp;</li>
+	<li>fbsetbg /Pictures/cyberpunk_hq.jpg&amp;</li>
+	<li>nm-applet&amp;</li>
+	<li>volti&amp;</li>
+</ul>
+<h2 id='fluxbox slit'>fluxbox slit</h2>
+<p>Added dockapps to slit:</p>
+<ul>
+	<li>wmnd -i wlp3s0&amp;</li>
+	<li>wmnd -i eth0&amp;</li>
+	<li>wmcpuload&amp;</li>
+	<li>wmmoonclock&amp;</li>
+</ul>
+<h2 id='fluxbox key combos'>fluxbox key combos</h2>
+<p>Added to ".fluxbox/keys":</p>
+<ul>
+	<li>Alt+t for 'terminal'. It's a small one...</li>
+	<li>Alt+g makes a bigger 'terminal'. The two sizes fit together nicely.</li>
+	<li>Alt+w for 'web': starts firefox.</li>
+	<li>Alt+f for 'find': starts dmenu_run.</li>
+	<li>Alt+c for 'close': closes current window.</li>
+	<li>Alt+x for 'xkill'.</li>
+	<li>Ctrl+Alt+l for 'xflock4'.</li>
+</ul>
+<div class="separator"></div>
+
+<h1 id='Glossary of Programs'>Glossary of Programs</h1>
+
+<h2 id='80'>80</h2>
+<p>Prints 80 characters to test how wide the standard terminal fits.</p>
+
+<h2 id='compton'>compton</h2>
+<p>This is the window compositor that allows transparency.</p>
+<ul>
+	<li>The transparency settings are taken care of by fluxbox
+	<ul>
+		<li>and then starting 'compton' makes it actually work!</li>
+	</ul></li>
+</ul>
+<h2 id='conky'>conky</h2>
+<p>Used with dzen2 to display some stats about the computer at all times.</p>
+
+<h2 id='dconf2'>dconf2</h2>
+<p>Installed only to fix an error message received from trying to run 'turtl'.<br />
+The message was:<br />
+"libgconf-2.so.4: cannot open shared object file: No such file or directory"</p>
+
+<h2 id='dmenu'>dmenu</h2>
+<p>An easy way to run any command without having to open a terminal. Includes an elegant auto-completion similar to tab-completion.</p>
+
+<h2 id='dosbox'>dosbox</h2>
+<p>An MS-DOS emulator. Mainly for playing DOS games.</p>
+
+<h2 id='dzen2'>dzen2</h2>
+<p>Displays any text that is piped to it, until the parent process exits.</p>
+
+<h2 id='eel'>eel</h2>
+
+<h2 id='ethmon'>ethmon</h2>
+
+<h2 id='fluxbox'>fluxbox</h2>
+<p>A simple windows manager with easy configuration files like .fluxbox/keys and .fluxbox/startup</p>
+<ul>
+	<li>Installed new fluxbox styles</li>
+</ul>
+<h2 id='geany'>geany</h2>
+<p>A great GUI text editor for writing code.</p>
+
+<h2 id='goodnight'>goodnight</h2>
+<p>This locks the screen and sleeps the computer in one simple command: "slock&amp;systemctl suspend;"</p>
+
+<h2 id='greed'>greed</h2>
+<p>A simple and colorful math-based ASCII game where you navigate a maze of numbers, and try to eat as many numbers as you can.</p>
+
+<h2 id='kate'>kate</h2>
+<p>Text editor with a preview of the entire document shrunk down to the size of a scrollbar on the right, to show you where you are in the document.</p>
+
+<h2 id='krita'>krita</h2>
+<p>A great artist program, including animation!</p>
+
+<h2 id='leafpad'>leafpad</h2>
+<p>Very simple text editor.</p>
+
+<h2 id='mama'>mama</h2>
+<p>Switches the keyboard to QWERTY.</p>
+
+<h2 id='memorize'>memorize</h2>
+<p>Prints out a random line from a file, one character at a time.</p>
+
+<h2 id='mplayer'>mplayer</h2>
+<p>To play media.</p>
+
+<h2 id='myman'>myman</h2>
+<p>A simple pac-man rip-off.</p>
+
+<h2 id='nginx'>nginx</h2>
+<p>A simple web server.</p>
+<ul>
+	<li>Basic set up is done.</li>
+	<li><a href="?p=http://localhost">http://localhost</a> works!</li>
+</ul>
+<h2 id='notecrypt'>notecrypt</h2>
+<p>Allows searching through an encrypted notes file created with "vim -x".</p>
+
+<h2 id='nott'>nott</h2>
+<p>A copy of notecrypt where I'm trying to remove all the excess code.</p>
+
+<h2 id='nyancat'>nyancat</h2>
+<p>Shows the colorful nyancat flying across your screen indefinitely, and counts how many seconds nyancat has been running.</p>
+
+<h2 id='ovpn'>ovpn</h2>
+<p>Initializes openvpn with the proper settings to work with the right VPN.</p>
+
+<h2 id='pickvpn'>pickvpn</h2>
+<p>Prints out different VPN ip addresses to choose from, one at a time. Copy and paste as the option for 'ovpn'.</p>
+
+<h2 id='sl'>sl</h2>
+<p>sl stands for "steam locomotive" and it punishes you for mistyping "ls" by having an ASCII steam locomotive drive across the terminal.</p>
+
+<h2 id='tt'>tt</h2>
+<p>Opens a narrow terminal with 'wyd', 'todo', and 'log' open in vim, opens 'memorize' in a tiny terminal below, and a big main window that doesn't have 'screen' going by default - so it can easily be used to SSH and open screen on the other side.</p>
+
+<h2 id='ttt'>ttt</h2>
+<p>Opens 'pickvpn' on a tiny terminal across the top of the screen, a big main window displaying 'top', and a narrow window on the right with 'screen' executed.</p>
+
+<h2 id='theconstruct'>theconstruct</h2>
+<p>A text-based game that allows creating new rooms in a world as imaginative as it's players. Every player can create any new screen, and anything in any sentence can lead to any other sentence, in a maze-like branching story.</p>
+
+<h2 id='turtl'>turtl</h2>
+<p>An encrypted notes app that allows note-sharing. Very decentralized, yet very secure.</p>
+
+<h2 id='vivaldi'>vivaldi</h2>
+<p>A new web browser I'm trying.</p>
+<ul>
+	<li>Installed vivaldi by .deb file. <tt>dpkg -i [file];apt-get update</tt></li>
+	<li>Ctrl+Shift+N starts a new private window.</li>
+	<li>!warning: uses Chrome base, which is widely considered a bad thing...</li>
+	<li>...but it also seems to be made by a good team, and has some spiritual roots in Opera.</li>
+</ul>
+<h2 id='vlc'>vlc</h2>
+<p>To play media.</p>
+
+<h2 id='xpdf'>xpdf</h2>
+<p>View a pdf.</p>
+
+<h2 id='youtube-dl'>youtube-dl</h2>
+<p>Download a youtube video via command-line.</p>
+
+<h2 id='zzt'>zzt</h2>
+<p>An old DOS game starts up using 'dosbox'.</p>
+
+	</body>
+
+	<!-- Generated by creoledump. -->
+</html>

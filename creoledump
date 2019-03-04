@@ -1,0 +1,212 @@
+#!/usr/bin/env python
+
+import sys
+from creole import *
+
+###############
+#             #
+#  Variables  #
+#             #
+###############
+
+import os
+folder = os.path.realpath(__file__)#makes all filenames refer to local files
+folder = folder[0:folder.rfind('/')]+'/'
+
+inputfile = True
+outputfile = folder+"index.html" #default output file
+
+include_head = True
+include_body = True
+include_foot = True
+
+quiet_mode = False
+
+html = unicode("","utf-8")
+creole_body = ""#unicode("","utf-8")
+
+# use stdin if it's full                                                        
+if not sys.stdin.isatty():
+    creole_body = "".join(sys.stdin.readlines())
+    inputfile = False
+
+################
+#              #
+#  Functions   #
+#              #
+################
+
+def cmdline_help():
+  return """
+creoledump: interprets text from input stream or input file as creole, translates it to html, and wraps it up in an html template.
+creoledump --help
+creoledump --head
+creoledump --foot
+echo creole.txt | creoledump --naked
+creoledump --naked
+creoledump --naked inputfile
+creoledump --naked inputfile outputfile
+echo creole.txt | creoledump
+creoledump inputfile
+creoledump inputfile outputfile
+"""
+
+def content_from_localfilepath(filename):
+    f = file(filename)
+    content = f.read()
+    f.close()
+    return content
+
+def content_from_localfile(filename):
+    f = file(folder+filename)
+    content = f.read()
+    f.close()
+    return content
+
+####################################################
+#                                                  #
+#  Redefine creole functions                       #
+#                                                  #
+####################################################
+
+#Redefine "separator_emit" to use "<div class='separator'>" instead of "<hr>".
+def creoledump_separator_emit(self, node):
+  return '<div class="separator"></div>\n\n'
+HtmlEmitter.separator_emit = creoledump_separator_emit
+
+#Redefine "link" to include "?p=" for all internal links.
+def creoledump_link_emit(self, node):
+  target = node.content
+  #Add ?p= by default, for internal links.
+  precrud = '<a href="?p='
+  if node.children:
+    inside = self.emit_children(node)
+  else:
+    inside = self.html_escape(target)
+  #Remove ?p= if it starts with for "external links" defined as 'www.','http://','https://', or '#'.
+  if target[:1]=="#" or target[:4]=="www." or target[:6]=="http://" or  target[:7]=="https://":
+    precrud = '<a href="'
+  return precrud+'%s">%s</a>' % (
+    self.attr_escape(target), inside)
+HtmlEmitter.link_emit = creoledump_link_emit
+
+#Redefine "header_emit" to include an "id=" tag of the same text as the header content.
+def creoledump_header_emit(self, node):
+  return u'<h%d id=\'%s\'>%s</h%d>\n' % (
+    node.level, self.html_escape(node.content), self.html_escape(node.content), node.level)
+HtmlEmitter.header_emit = creoledump_header_emit
+
+#Redefine "small_emit" which uses "--this--" syntax to translate to "<strike>" instead of "<small>".
+def creoledump_strike_emit(self, node):
+  return u'<strike>%s</strike>' % self.emit_children(node)
+HtmlEmitter.small_emit = creoledump_strike_emit
+
+##########################
+#                        #
+#  Argument Handling     #
+#                        #
+##########################
+
+args_left = sys.argv[1:]#excludes the script name,
+# and will exclude any arg that's been processed.
+
+##############################
+#  Handle Special Options    #
+##############################
+
+#creoledump [--help|--head|--foot|--naked|--quiet] INPUTFILE OUTPUTFILE
+#--quiet means it does not output to any file. This option is important, because if you want to translate some creole to HTML without putting it anywhere you don't want it to go, you have to specify "--quiet", because even without specifying the OUTPUTFILE it will still export the translated creole into HTML as a file in a default location. Which should be "html.txt" in the same folder as the script.
+
+if len(args_left)>0: #There are 'arguments'.
+  next_arg = args_left[0]
+
+  #First, check for one of the extraneous parameters.
+  if next_arg=="--help":
+    sys.stdout.write(cmdline_help())
+    sys.exit()
+  elif next_arg=="--head":
+    sys.stdout.write(content_from_localfile("head.txt"))
+    sys.exit()
+  elif next_arg=="--foot":
+    sys.stdout.write(content_from_localfile("foot.txt"))
+    sys.exit()
+  elif next_arg=="--naked":
+    include_head = False
+    include_foot = False
+    outputfile = False
+    #No default output, but it could go to a specified file.
+    args_left = args_left[1:]
+  elif next_arg=="--quiet":
+    quiet_mode = True
+    #No default output, but it could go to a specified file?
+    args_left = args_left[1:]
+
+###############################
+#  Handle Input/Output Files  #
+###############################
+
+if len(args_left)>0:
+  next_arg = args_left[0]
+  #inputfile? assumed to be input text file; formatted as wikicreole
+  if inputfile:
+    inputfile = next_arg
+    args_left = args_left[1:]
+    if len(args_left)>0:
+      next_arg = args_left[0]
+      outputfile = next_arg
+      args_left = args_left[1:]
+  #outputfile? assumed to be output html file
+  elif outputfile:#se:
+    #no input means it was piped in, theres no input filename, so the first filename is the output file.
+    outputfile = next_arg
+    args_left = args_left[1:]
+
+##############################################################
+##############################################################
+# known: specialoption, inputfile, outputfile.               #
+# if not inputfile: the input is from STDIN                  #
+# if not outputfile: thats fine, it still prints it out      #
+##############################################################
+##############################################################
+
+#add creole.txt via creole2html
+if include_body:
+  #creole content
+  if inputfile and type(inputfile)==type("string"):
+    creole_body = content_from_localfilepath(inputfile)
+  #convert creole to html
+  creole_body = unicode(creole_body,"utf-8")
+  html_body = creole2html(creole_body)
+  html = html_body
+else:
+  html = unicode("","utf-8")
+
+#add header?
+if include_head:
+  html_head = content_from_localfile("head.txt")
+  html = html_head + html
+
+#add footer
+if include_foot:
+  html_foot = content_from_localfile("foot.txt")
+  html = html + html_foot
+
+#overwrite output file
+if outputfile and len(creole_body)>0:
+  f = file(outputfile,"w")
+  f.write(html)
+  f.close()
+#print it either way
+
+if not quiet_mode:
+  sys.stdout.write(html)
+#else:
+#  sys.stderr.write("No filename was given. Exiting...\n")
+
+###############
+#             #
+#  CHANGELOG  #
+#             #
+###############
+
+# No longer uses "creole.txt"
