@@ -1,0 +1,31 @@
+=/wiki=
+
+**Files:**
+* **wiki.php**
+* **wikiraw.txt**
+* **wikihtml.txt**
+
+This wiki processes all the basics of WikiCreole such as **bold** and //italics//.
+
+As well as...
+
+=header 1=
+
+==header 2==
+
+===header 3===
+
+====header 4====
+
+=====header 5=====
+
+It also does WikiCreole additions such as --strike--, __underline__, ^^superscript^^, or even a ,,footnote,,.
+
+This does a --strike-- or __underline__ or ^^superscript^^ or ,,footnote,, or {{{anything}}}!!!
+
+It also handles magic quotes properly, as in...
+
+&ldquo;Understanding is the first step to acceptance, and only with acceptance can there be recovery.&rdquo; 
+--J.K. Rowling, Harry Potter and the Goblet of Fire
+
+==this works!==
