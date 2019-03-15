@@ -23,7 +23,7 @@ include_foot = True
 quiet_mode = False
 
 html = unicode("","utf-8")
-creole_body = ""#unicode("","utf-8")
+creole_body = unicode("","utf-8")
 
 # use stdin if it's full                                                        
 if not sys.stdin.isatty():
@@ -51,14 +51,16 @@ creoledump inputfile
 creoledump inputfile outputfile
 """
 
+import codecs
+
 def content_from_localfilepath(filename):
-    f = file(filename)
+    f = codecs.open(filename,"r","utf-8")
     content = f.read()
     f.close()
     return content
 
 def content_from_localfile(filename):
-    f = file(folder+filename)
+    f = codecs.open(folder+filename,"r","utf-8")
     content = f.read()
     f.close()
     return content
@@ -175,7 +177,8 @@ if include_body:
   if inputfile and type(inputfile)==type("string"):
     creole_body = content_from_localfilepath(inputfile)
   #convert creole to html
-  creole_body = unicode(creole_body,"utf-8")
+  if type(creole_body)!=type(u'unicode'):
+    creole_body = unicode(creole_body,"utf-8")
   html_body = creole2html(creole_body)
   html = html_body
 else:
@@ -193,7 +196,7 @@ if include_foot:
 
 #overwrite output file
 if outputfile and len(creole_body)>0:
-  f = file(outputfile,"w")
+  f = codecs.open(outputfile,"w","utf-8")
   f.write(html)
   f.close()
 #print it either way
