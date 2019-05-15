@@ -14,13 +14,19 @@ folder = os.path.realpath(__file__)#makes all filenames refer to local files
 folder = folder[0:folder.rfind('/')]+'/'
 
 inputfile = True
-outputfile = folder+"index.html" #default output file
+dumpfile = folder+"index.html" #dumpfile is the default output file
+outputfile = dumpfile #output file defaults to dumpfile.
+#outputfile is overridden if a different file is specified.
 
 include_head = True
 include_body = True
 include_foot = True
 
 quiet_mode = False
+#quiet mode means that nothing will output to the dumpfile.
+# -- especially useful on servers where the dumpfile is public.
+silent_mode = False
+#silent mode means that nothing will output to the dumpfile OR to STDOUT.
 
 html = unicode("","utf-8")
 creole_body = unicode("","utf-8")
@@ -38,32 +44,103 @@ if not sys.stdin.isatty():
 
 def cmdline_help():
   return """
-creoledump: interprets text from input stream or input file as creole, translates it to html, and wraps it up in an html template.
+creoledump: interprets text from input file or STDIN as WikiCreole, translates it to HTML, wraps it up in an html template, and outputs to STDOUT and an output file.
+
+USAGE:
+    creoledump --help
+    creoledump [--head|--foot] [OUTPUTFILE]
+    creoledump [--naked|--quiet] INPUTFILE [OUTPUTFILE]
+    INPUTSTREAM | creoledump [--naked|--quiet] [OUTPUTFILE]
+
 creoledump --help
-creoledump --head
-creoledump --foot
-echo creole.txt | creoledump --naked
-creoledump --naked
-creoledump --naked inputfile
-creoledump --naked inputfile outputfile
-echo creole.txt | creoledump
-creoledump inputfile
-creoledump inputfile outputfile
+    This prints out this help message.
+creoledump INPUTFILE [OUTPUTFILE]
+    This interprets the INPUTFILE as WikiCreole, translates it to HTML, and wraps it in an HTML template.
+    It outputs the HTML to STDOUT and either the default dumpfile or the specified OUTPUTFILE.
+creoledump --head [OUTPUTFILE]
+    This prints out just the header from the HTML template.
+    This operates in quiet mode, it does not output to the dumpfile, it only outputs to STDOUT and any specified OUTPUTFILE.
+creoledump --foot [OUTPUTFILE]
+    This prints out just the footer from the HTML template.
+    This operates in quiet mode, it does not output to the dumpfile, it only outputs to STDOUT and any specified OUTPUTFILE.
+creoledump --naked INPUTFILE [OUTPUTFILE]
+    This interprets the INPUTFILE as WikiCreole, translates it to HTML.
+    It does NOT wrap it in an HTML template, leaving it "naked". Ideal for translating one line at a time instead of a whole document.
+    This operates in quiet mode, it does not output to the dumpfile, it only outputs to STDOUT and any specified OUTPUTFILE.
+creoledump --quiet INPUTFILE [OUTPUTFILE]
+    This activates quiet mode, which makes sure your translation won't output to the default dumpfile.
+
+PRIMARY USE CASE:
+
+    To translate a WikiCreole document into HTML simply type:
+
+        creoledump INPUTFILE
+
+    You should immediately have a readable HTML page at a default location:
+    
+        default location: ~/.creoledump/index.html
+
+    Therefore, no output file is necessary, it just dumps it in the "dumpfile".
+    Thus the name "creoledump". You're just dumping your WikiCreole into the
+    dumpfile, which you can then open in your browser for a very readable format.
+
+    The idea was that you could just keep this "dumpfile" open in your browser,
+    and use it as a "viewer" for viewing your notes and docs in a nice format.
+    Then you can store your notes and documents in WikiCreole format, so that
+    they're incredibly quick and easy to edit, and still very readable in your
+    browser as you "creoledump" one after the other using this simple command.
+
+    Just keep it open in your browser, remember to refresh the page, and enjoy!
+
+SECONDARY USE CASE:
+
+    The rest of the options are for translating WikiCreole line-by-line.
+
+    Example: Using it to translate WikiCreole to HTML line-by-line in VIM.
+
+        1. Select the text in VISUAL MODE using the "v" key.
+
+        2. Then type ":" which may present a prompt like:
+               :'<,'>
+
+        3. Then type "%!creoledump --naked", which may now look like:
+               :'<,'>%!creoledump --naked
+
+        4. Press ENTER.
+
+        It should have translated it from WikiCreole to HTML.
+
+GLOSSARY
+
+    "dumpfile" just means the default output file.
+
+    "quiet mode" just means that nothing gets output to the "dumpfile".
+
+    All the options other than the 'primary use case' operate in "quiet mode".
+
 """
 
 import codecs
 
 def content_from_localfilepath(filename):
+  try:
     f = codecs.open(filename,"r","utf-8")
     content = f.read()
     f.close()
     return content
+  except:
+    print("File '%s' not found." % filename)
+    sys.exit()
 
 def content_from_localfile(filename):
+  try:
     f = codecs.open(folder+filename,"r","utf-8")
     content = f.read()
     f.close()
     return content
+  except:
+    print("File '%s' not found." % filename)
+    sys.exit()
 
 ####################################################
 #                                                  #
@@ -116,31 +193,52 @@ args_left = sys.argv[1:]#excludes the script name,
 #  Handle Special Options    #
 ##############################
 
-#creoledump [--help|--head|--foot|--naked|--quiet] INPUTFILE OUTPUTFILE
-#--quiet means it does not output to any file. This option is important, because if you want to translate some creole to HTML without putting it anywhere you don't want it to go, you have to specify "--quiet", because even without specifying the OUTPUTFILE it will still export the translated creole into HTML as a file in a default location. Which should be "html.txt" in the same folder as the script.
+#    creoledump --help
+#    creoledump [--head|--foot] [OUTPUTFILE]
+#    creoledump [--naked|--quiet] INPUTFILE [OUTPUTFILE]
+#    INPUTSTREAM | creoledump [--naked|--quiet] [OUTPUTFILE]
+#    "--quiet" means it does not output to the default "dumpfile". This option is important, because if you want to translate some creole to HTML without putting it anywhere you don't want it to go, you have to specify "--quiet", because even without specifying the OUTPUTFILE it will still export the translated creole into HTML as a file in a default location. Which should be "index.html" in the same folder as the script.
 
+#First, check for one of the extraneous parameters.
 if len(args_left)>0: #There are 'arguments'.
   next_arg = args_left[0]
 
-  #First, check for one of the extraneous parameters.
   if next_arg=="--help":
     sys.stdout.write(cmdline_help())
     sys.exit()
   elif next_arg=="--head":
-    sys.stdout.write(content_from_localfile("head.txt"))
-    sys.exit()
+    quiet_mode = True#Presumably, you don't want to overwrite the dumpfile with just a footer or header.
+    inputfile = False
+    include_body = False
+    include_foot = False
+    args_left = args_left[1:]
   elif next_arg=="--foot":
-    sys.stdout.write(content_from_localfile("foot.txt"))
-    sys.exit()
+    quiet_mode = True#Presumably, you don't want to overwrite the dumpfile with just a footer or header.
+    inputfile = False
+    include_head = False
+    include_body = False
+    args_left = args_left[1:]
   elif next_arg=="--naked":
+    quiet_mode = True#Presumably, you don't want to overwrite the dumpfile with just a fragment of html.
     include_head = False
     include_foot = False
-    outputfile = False
-    #No default output, but it could go to a specified file.
     args_left = args_left[1:]
-  elif next_arg=="--quiet":
+
+#Second, whether or not there was an argument before this one, check for the 'quiet mode' argument.
+if len(args_left)>0: #There are more 'arguments'.
+  next_arg = args_left[0]
+  if next_arg=="--quiet":
     quiet_mode = True
-    #No default output, but it could go to a specified file?
+    #No default output, but it could still go to a specified file.
+    args_left = args_left[1:]
+
+#Third, whether or not there was an argument before this one, check for the 'silent mode' argument.
+if len(args_left)>0: #There are more 'arguments'.
+  next_arg = args_left[0]
+  if next_arg=="--silent":
+    silent_mode = True
+    quiet_mode = True
+    #No default output, but it could still go to a specified file.
     args_left = args_left[1:]
 
 ###############################
@@ -153,15 +251,14 @@ if len(args_left)>0:
   if inputfile:
     inputfile = next_arg
     args_left = args_left[1:]
-    if len(args_left)>0:
-      next_arg = args_left[0]
-      outputfile = next_arg
-      args_left = args_left[1:]
-  #outputfile? assumed to be output html file
-  elif outputfile:#se:
-    #no input means it was piped in, theres no input filename, so the first filename is the output file.
+if len(args_left)>0:
+  next_arg = args_left[0]
+  if outputfile:
     outputfile = next_arg
     args_left = args_left[1:]
+elif silent_mode==True:
+  print("Output file required in 'silent mode'.")
+  sys.exit()
 
 ##############################################################
 ##############################################################
@@ -195,13 +292,14 @@ if include_foot:
   html = html + html_foot
 
 #overwrite output file
-if outputfile and len(creole_body)>0:
-  f = codecs.open(outputfile,"w","utf-8")
-  f.write(html)
-  f.close()
+if outputfile:# and len(creole_body)>0:
+  if not quiet_mode or outputfile!=dumpfile:
+    f = codecs.open(outputfile,"w","utf-8")
+    f.write(html)
+    f.close()
 #print it either way
 
-if not quiet_mode:
+if not silent_mode:
   sys.stdout.write(html)
 #else:
 #  sys.stderr.write("No filename was given. Exiting...\n")
