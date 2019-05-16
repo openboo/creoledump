@@ -16,7 +16,7 @@ folder = os.path.realpath(__file__)#makes all filenames refer to local files
 folder = folder[0:folder.rfind('/')]+'/'
 
 inputfile = True
-dumpfile = folder+"index.html" #dumpfile is the default output file
+dumpfile = folder+"dump.txt" #dumpfile is the default output file
 outputfile = dumpfile #output file defaults to dumpfile.
 #outputfile is overridden if a different file is specified.
 
@@ -80,7 +80,7 @@ PRIMARY USE CASE:
 
     You should immediately have a readable HTML page at a default location:
     
-        default location: ~/.creoledump/index.html
+        default location: ~/.creoledump/dump.txt
 
     Therefore, no output file is necessary, it just dumps it in the "dumpfile".
     Thus the name "creoledump". You're just dumping your WikiCreole into the
@@ -199,7 +199,7 @@ args_left = sys.argv[1:]#excludes the script name,
 #    creoledump [--head|--foot] [OUTPUTFILE]
 #    creoledump [--naked|--quiet] INPUTFILE [OUTPUTFILE]
 #    INPUTSTREAM | creoledump [--naked|--quiet] [OUTPUTFILE]
-#    "--quiet" means it does not output to the default "dumpfile". This option is important, because if you want to translate some creole to HTML without putting it anywhere you don't want it to go, you have to specify "--quiet", because even without specifying the OUTPUTFILE it will still export the translated creole into HTML as a file in a default location. Which should be "index.html" in the same folder as the script.
+#    "--quiet" means it does not output to the default "dumpfile". This option is important, because if you want to translate some creole to HTML without putting it anywhere you don't want it to go, you have to specify "--quiet", because even without specifying the OUTPUTFILE it will still export the translated creole into HTML as a file in a default location. Which should be "dump.txt" in the same folder as the script.
 
 #First, check for one of the extraneous parameters.
 if len(args_left)>0: #There are 'arguments'.
